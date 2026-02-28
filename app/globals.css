@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-gold: #b88a2e; /* adjust based on your logo */
+  --brand-dark: #0f0f0f; /* navy from logo */
+  --brand-bg: #111214;
 }
 
 @theme inline {
