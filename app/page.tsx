@@ -105,7 +105,7 @@ export default function Home() {
 
           <div className="text-center md:text-left max-w-lg">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
-              M&M Fashion India
+              M&M Fashion
             </h1>
 
             <p className="text-gray-300 mb-3 text-lg">
@@ -145,7 +145,7 @@ export default function Home() {
       {/* ABOUT */}
       <section id="about" className="py-20 px-6 text-center max-w-5xl mx-auto">
         <h2 className="text-3xl font-semibold mb-6 text-black">
-          About M&M Fashion India
+          About M&M Fashion
         </h2>
 
         <p className="text-gray-600 leading-8">
@@ -206,7 +206,7 @@ export default function Home() {
 
   <a href="https://instagram.com/mmfashionindia" target="_blank"
     className="inline-block mt-8 px-6 py-3 bg-black text-white rounded-full">
-    View More
+    View More on Instagram
   </a>
 </section>
 
@@ -225,9 +225,9 @@ export default function Home() {
     <img src="/images/kids3.png" className="rounded-xl hover:scale-105 transition" />
   </div>
 
-  <a href="https://instagram.com/mmfashionindia" target="_blank"
+  <a href="https://www.facebook.com/mmfashionindia" target="_blank"
     className="inline-block mt-8 px-6 py-3 bg-black text-white rounded-full">
-    View More
+    View More on Facebook
   </a>
 </section>
 
@@ -246,9 +246,9 @@ export default function Home() {
     <img src="/images/web5.png" className="rounded-xl hover:scale-105 transition" />
   </div>
 
-  <a href="https://instagram.com/mmfashionindia" target="_blank"
+  <a href="https://www.youtube.com/@mmfashionindia/shorts" target="_blank"
     className="inline-block mt-8 px-6 py-3 bg-black text-white rounded-full">
-    Explore More
+    Explore More on Youtube
   </a>
 </section>
 

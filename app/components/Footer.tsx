@@ -6,13 +6,13 @@ export default function Footer() {
     <footer className="bg-[color:var(--brand-soft-dark)] text-white py-20 border-t border-gray-800">
       <div className="max-w-6xl mx-auto text-center">
 
-        <Image
+        {/* <Image
           src="/logo/logotransparent.png"
           alt="M&M Fashion"
           width={130}
           height={40}
           className="mx-auto mb-8"
-        />
+        /> */}
 
         <div className="flex justify-center gap-6 mb-6">
           <Instagram className="w-5 h-5 hover:text-[color:var(--brand-gold)] transition" />

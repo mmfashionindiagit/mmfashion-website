@@ -32,7 +32,7 @@ export default function Navbar() {
           </a>
 
           <a
-            href="https://youtube.com/@mmfashionindia"
+            href="https://www.youtube.com/@mmfashionindia/shorts"
             target="_blank"
           >
             <Youtube className="w-5 h-5 text-black hover:text-[color:var(--brand-gold)] transition" />
