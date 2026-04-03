@@ -10,28 +10,37 @@ export default function Countdown() {
     seconds: number;
   } | null>(null);
 
-  // ✅ FIX: create target date ONCE (not every second)
-  const [targetDate] = useState(() => {
-    const date = new Date();
-    date.setDate(date.getDate() + 20);
-    return date;
-  });
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+
+  // ✅ Load or create target date ONLY ONCE
+  useEffect(() => {
+    const storedDate = localStorage.getItem("countdown_target");
+
+    if (storedDate) {
+      setTargetDate(new Date(storedDate));
+    } else {
+      const newDate = new Date();
+      newDate.setDate(newDate.getDate() + 20);
+
+      localStorage.setItem("countdown_target", newDate.toISOString());
+      setTargetDate(newDate);
+    }
+  }, []);
 
   useEffect(() => {
-    // const targetDate = new Date("2026-04-01T00:00:00");
+    if (!targetDate) return;
 
     const updateCountdown = () => {
       const now = new Date();
       const difference = targetDate.getTime() - now.getTime();
 
-      // ✅ prevent negative values after expiry
       if (difference <= 0) {
-        setTimeLeft({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        });
+        // ✅ Reset AFTER 20 days completed
+        const newDate = new Date();
+        newDate.setDate(newDate.getDate() + 20);
+
+        localStorage.setItem("countdown_target", newDate.toISOString());
+        setTargetDate(newDate);
         return;
       }
 
@@ -43,15 +52,13 @@ export default function Countdown() {
       setTimeLeft({ days, hours, minutes, seconds });
     };
 
-    updateCountdown(); // initial
+    updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  if (!timeLeft) {
-    return null; // prevents hydration mismatch
-  }
+  if (!timeLeft) return null;
 
   return (
     <div className="flex gap-10 justify-center md:justify-start mt-8">
