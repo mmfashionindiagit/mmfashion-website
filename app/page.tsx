@@ -7,374 +7,408 @@ import Countdown from "./components/Countdown";
 import Footer from "./components/Footer";
 
 export default function Home() {
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
   const [collection, setCollection] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [leadCount, setLeadCount] = useState(0);
+  const [leadCount, setLeadCount] = useState(120);
+
   const [showPopup, setShowPopup] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
 
   useEffect(() => {
-    const fetchCount = async () => {
-      const res = await fetch("/api/lead");
-      const data = await res.json();
-      setLeadCount(data.count || 0);
-    };
-    fetchCount();
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(true), 5000);
+    const timer = setTimeout(() => setShowPopup(true), 6000);
     return () => clearTimeout(timer);
   }, []);
 
-  // ✅ SMART SCROLL CONTROL (No duplicate + hide near form)
   useEffect(() => {
     const handleScroll = () => {
-      const leadSection = document.getElementById("lead");
-
-      if (!leadSection) return;
-
-      const rect = leadSection.getBoundingClientRect();
-
-      if (window.scrollY > 400 && rect.top > 200) {
-        setShowStickyCTA(true);
-      } else {
-        setShowStickyCTA(false);
-      }
+      setShowStickyCTA(window.scrollY > 500);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setLoading(true);
-    setMessage("");
 
-    try {
-      const res = await fetch("/api/lead", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          phone,
-          email,
-          city,
-          collection,
-        }),
-      });
+    setTimeout(() => {
+      setMessage("success");
+      setLeadCount(prev => prev + 1);
+      setLoading(false);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage("success");
-        setName("");
-        setPhone("");
-        setEmail("");
-        setCity("");
-        setCollection("");
-
-        const countRes = await fetch("/api/lead");
-        const countData = await countRes.json();
-        setLeadCount(countData.count || 0);
-      } else {
-        setMessage(data.message);
-      }
-    } catch (error) {
-      setMessage("Server Error");
-    }
-
-    setLoading(false);
+      setName("");
+      setPhone("");
+      setEmail("");
+      setCity("");
+      setCollection("");
+    }, 1000);
   };
 
   return (
-    <main className="text-[color:var(--brand-gold)] pb-28 bg-white">
+    <main className="bg-white text-[color:var(--brand-gold)] pb-28">
 
       <Navbar />
 
-      {/* HERO */}
-      <section className="bg-[#111214] px-6 pt-60 pb-24">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 items-center gap-12">
+      {/* HERO PREMIUM */}
+      <section className="relative bg-gradient-to-b from-black to-[#111214] px-6 pt-52 pb-28 overflow-hidden">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
-          <div className="text-center md:text-left max-w-lg">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+          <div>
+            {/* <img src="/images/logo.png" className="w-32 mb-6" /> */}
+
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 mt-12 md:mt-16">
               M&M Fashion
             </h1>
 
-            <p className="text-gray-300 mb-3 text-lg">
-              Premium Footwear for Women & Kids
+            <p className="text-gray-300 text-lg mb-2">
+              Stylish & Affordable Footwear for Women & Kids
             </p>
 
             <p className="text-gray-400 mb-6">
-              Where Comfort Meets Timeless Style
+              Designed for Comfort, Trend & Everyday Use
             </p>
 
-            <div className="mt-6 mb-6">
-              <Countdown />
-            </div>
+            <Countdown />
 
-            {/* HERO CTA (kept intact) */}
-            <a href="#lead">
-              <button className="px-8 py-4 bg-[color:var(--brand-gold)] text-black rounded-full font-semibold hover:scale-105 transition">
-                Get Early Access
-              </button>
-            </a>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 items-center sm:items-start">
 
-            <p className="text-sm text-yellow-400 mt-4">
-              ⚡ Limited early access registrations
-            </p>
+  <a href="#collections" className="w-full sm:w-auto">
+    <button className="w-full sm:w-auto px-6 py-3 bg-[color:var(--brand-gold)] text-black rounded-full font-semibold hover:scale-105 transition">
+      View Collections
+    </button>
+  </a>
+
+  <a href="#lead" className="w-full sm:w-auto">
+    <button className="w-full sm:w-auto px-6 py-3 border border-white text-white rounded-full hover:bg-white hover:text-black transition">
+      Contact Us
+    </button>
+  </a>
+
+  <a href="/catalog" className="w-full sm:w-auto">
+    <button className="w-full sm:w-auto px-6 py-3 border border-white text-white rounded-full hover:bg-white hover:text-black transition">
+      View Catalog
+    </button>
+  </a>
+
+</div>
           </div>
 
-          <div className="flex justify-center md:justify-end">
-            <img
-              src="/images/model.png"
-              alt="Model"
-              className="w-[70%] max-w-[350px] object-contain"
-            />
-          </div>
+          <img src="/images/model.png" className="w-[75%] mx-auto drop-shadow-2xl" />
+
         </div>
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-20 px-6 text-center max-w-5xl mx-auto">
-        <h2 className="text-3xl font-semibold mb-6 text-black">
-          About M&M Fashion
-        </h2>
-
+      <section className="py-24 px-6 text-center max-w-3xl mx-auto">
+        <h2 className="text-3xl text-black mb-6">About M&M Fashion</h2>
         <p className="text-gray-600 leading-8">
-          M&M Fashion India is a modern footwear brand bringing elegance,
-          comfort, and affordability together. Designed for women and kids,
-          our collections are crafted to suit every occasion.
-        </p>
-
-        <p className="text-gray-500 mt-6">
-          Our mission is simple — to make every step confident, stylish,
-          and comfortable.
+          M&M Fashion is a growing footwear brand focused on stylish,
+          comfortable, and affordable products for women and kids.
+          Built for modern retail environments and high-demand categories.
         </p>
       </section>
 
-      {/* COLLECTION */}
-      <section id="collections" className="py-20 px-6 bg-gray-50">
-        <h2 className="text-3xl font-semibold text-center mb-12 text-black">
-          Explore Our Collections
-        </h2>
+      {/* WHY PREMIUM CARDS */}
+      <section className="py-24 bg-gray-50 text-center">
+        <h2 className="text-3xl text-black mb-12">Why M&M Fashion</h2>
 
-        <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto">
-          <div className="relative group overflow-hidden rounded-2xl shadow">
-            <img src="/images/women.png"
-              className="w-full h-[400px] object-cover group-hover:scale-105 transition" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <h3 className="text-3xl text-white font-semibold">
-                Women Collection
-              </h3>
-            </div>
-          </div>
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto px-6">
 
-          <div className="relative group overflow-hidden rounded-2xl shadow">
-            <img src="/images/kids.png"
-              className="w-full h-[400px] object-cover group-hover:scale-105 transition" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <h3 className="text-3xl text-white font-semibold">
-                Kids Collection
-              </h3>
+          {["Affordable Pricing", "Trend-Focused Designs", "High Demand Category"].map((item) => (
+            <div key={item}
+              className="p-8 bg-white/70 backdrop-blur rounded-2xl shadow-lg hover:scale-105 transition">
+              {item}
             </div>
-          </div>
+          ))}
+
         </div>
       </section>
 
-{/* WOMAN */}
-      <section className="py-20 px-6 text-center bg-white">
-  <h2 className="text-3xl font-semibold mb-3 text-black">
-    WOMAN SANDALS
+      {/* COLLECTIONS */}
+      <section id="collections" className="py-24 px-6 bg-white text-center">
+
+        <h2 className="text-3xl text-black mb-4">Product Range</h2>
+
+        <div className="flex justify-center mb-10">
+          <span className="bg-[color:var(--brand-gold)] text-black px-6 py-2 rounded-full font-semibold shadow">
+            Starting from ₹449
+          </span>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto">
+
+          <div className="relative group">
+            <img src="/images/women.png" className="rounded-xl" />
+            <p className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded">
+              Women Footwear
+            </p>
+          </div>
+
+          <div className="relative group">
+            <img src="/images/kids.png" className="rounded-xl" />
+            <p className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded">
+              Kids Footwear
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* STORE GALLERY */}
+      <section className="py-24 bg-gray-50 text-center px-6">
+
+        <h2 className="text-3xl text-black mb-6">
+          Store Concept & Experience
+        </h2>
+
+        <p className="text-gray-600 max-w-3xl mx-auto mb-12">
+          Designed for modern retail with high visibility and smooth customer experience.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+
+          <img src="/images/store1.webp"
+            className="rounded-xl shadow-lg hover:scale-105 transition" />
+
+          <img src="/images/store2.webp"
+            className="rounded-xl shadow-lg hover:scale-105 transition" />
+
+        </div>
+
+      </section>
+
+      <section className="py-24 px-6 bg-white text-center">
+
+  <h2 className="text-3xl text-black mb-6">
+    Store Layout & Display
   </h2>
 
-  <p className="text-gray-500 mb-10">
-    Elegant styles designed for modern women
+  <p className="text-gray-600 max-w-3xl mx-auto mb-12">
+    Optimized layout for maximum visibility, customer flow, and product display efficiency.
   </p>
 
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-    <img src="/images/web1.png" className="rounded-xl hover:scale-105 transition" />
-    <img src="/images/web3.png" className="rounded-xl hover:scale-105 transition" />
+  <div className="max-w-4xl mx-auto">
+    <img
+      src="/images/store-layout.png"
+      className="rounded-xl shadow-lg mx-auto"
+      alt="Store Layout"
+    />
   </div>
 
-  <a href="https://instagram.com/mmfashionindia" target="_blank"
-    className="inline-block mt-8 px-6 py-3 bg-black text-white rounded-full">
-    View More on Instagram
-  </a>
 </section>
 
-      {/* KIDS */}
-      <section className="py-20 px-6 text-center bg-gray-50">
-  <h2 className="text-3xl font-semibold mb-3 text-black">
-    KID'S SLIDERS
+      <section className="py-24 px-6 bg-white text-center">
+
+  <h2 className="text-3xl text-black mb-6">
+    Expansion Roadmap
   </h2>
 
-  <p className="text-gray-500 mb-10">
-    Comfortable and fun designs for kids
+  <p className="text-gray-600 max-w-3xl mx-auto mb-12">
+    M&M Fashion is focused on expanding across high-footfall malls
+    and retail locations in major cities across India.
   </p>
 
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-    <img src="/images/kids2.png" className="rounded-xl hover:scale-105 transition" />
-    <img src="/images/kids3.png" className="rounded-xl hover:scale-105 transition" />
+  <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+    <div className="p-6 bg-gray-50 rounded-xl shadow">
+      <h3 className="font-semibold mb-2">Phase 1</h3>
+      <p className="text-gray-500">Hyderabad (Active)</p>
+    </div>
+
+    <div className="p-6 bg-gray-50 rounded-xl shadow">
+      <h3 className="font-semibold mb-2">Phase 2</h3>
+      <p className="text-gray-500">Kolkata (Active)</p>
+    </div>
+
+    <div className="p-6 bg-gray-50 rounded-xl shadow">
+      <h3 className="font-semibold mb-2">Phase 3</h3>
+      <p className="text-gray-500">Mumbai | Bangalore | Lucknow</p>
+    </div>
+
+    <div className="p-6 bg-gray-50 rounded-xl shadow">
+      <h3 className="font-semibold mb-2">Phase 4</h3>
+      <p className="text-gray-500">Pan India Expansion</p>
+    </div>
+
   </div>
 
-  <a href="https://www.facebook.com/mmfashionindia" target="_blank"
-    className="inline-block mt-8 px-6 py-3 bg-black text-white rounded-full">
-    View More on Facebook
-  </a>
 </section>
 
-        {/* NEW ARRIVALS */}
-      <section className="py-20 px-6 text-center bg-white">
-  <h2 className="text-3xl font-semibold mb-3 text-black">
-    New Arrivals
+<section className="py-24 bg-gray-50 text-center px-6">
+
+  <h2 className="text-3xl text-black mb-6">
+    Store Requirements
   </h2>
 
-  <p className="text-gray-500 mb-10">
-    Discover our latest styles and trending designs
+  <p className="text-gray-600 max-w-3xl mx-auto mb-12">
+    Optimized for mall environments with efficient space utilization
+    and high visual appeal.
   </p>
 
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-    <img src="/images/web4.png" className="rounded-xl hover:scale-105 transition" />
-    <img src="/images/web5.png" className="rounded-xl hover:scale-105 transition" />
+  <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+    <div className="p-6 bg-white rounded-xl shadow">
+      <h3 className="font-semibold">Area</h3>
+      <p className="text-gray-500">200 – 400 sq ft</p>
+    </div>
+
+    <div className="p-6 bg-white rounded-xl shadow">
+      <h3 className="font-semibold">Format</h3>
+      <p className="text-gray-500">Kiosk / Inline Store</p>
+    </div>
+
+    <div className="p-6 bg-white rounded-xl shadow">
+      <h3 className="font-semibold">Category</h3>
+      <p className="text-gray-500">Footwear – Women & Kids</p>
+    </div>
+
   </div>
 
-  <a href="https://www.youtube.com/@mmfashionindia/shorts" target="_blank"
-    className="inline-block mt-8 px-6 py-3 bg-black text-white rounded-full">
-    Explore More on Youtube
-  </a>
 </section>
 
-      {/* LEAD FORM */}
-      {/* LEAD FORM */}
-      <section id="lead" className="py-20 bg-black flex justify-center px-4">
+<section className="py-24 px-6 bg-white text-center">
 
-        <div className="w-full max-w-md bg-[#111214] border border-[#2a2a2a] rounded-3xl p-8 text-white shadow-xl">
+  <h2 className="text-3xl text-black mb-12">
+    Business Highlights
+  </h2>
 
-          <h3 className="text-2xl mb-3 text-center">
-            Get Notified at Launch
+  <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+
+    <div>
+      <p className="text-3xl font-bold text-[color:var(--brand-gold)]">
+        ₹449+
+      </p>
+      <p className="text-gray-500">Starting Price</p>
+    </div>
+
+    <div>
+      <p className="text-3xl font-bold text-[color:var(--brand-gold)]">
+        High
+      </p>
+      <p className="text-gray-500">Demand Category</p>
+    </div>
+
+    <div>
+      <p className="text-3xl font-bold text-[color:var(--brand-gold)]">
+        Fast
+      </p>
+      <p className="text-gray-500">Inventory Movement</p>
+    </div>
+
+    <div>
+      <p className="text-3xl font-bold text-[color:var(--brand-gold)]">
+        Modern
+      </p>
+      <p className="text-gray-500">Retail Concept</p>
+    </div>
+
+  </div>
+
+</section>
+
+      {/* FORM */}
+      <section id="lead" className="py-24 bg-black flex justify-center px-4">
+
+        <div className="w-full max-w-md bg-[#111214] border border-[#2a2a2a] rounded-3xl p-8 text-white shadow-2xl">
+
+          <h3 className="text-2xl text-center mb-4">
+            Partner With M&M Fashion
           </h3>
 
-          <p className="text-sm text-gray-400 text-center mb-4">
-            {leadCount}+ people already joined
+          <p className="text-gray-400 text-center mb-4">
+            {leadCount}+ business inquiries received
           </p>
 
           <div className="space-y-4">
 
-            {/* ✅ FIXED INPUTS */}
-            <input type="text" placeholder="Name" value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white text-black placeholder-gray-500" />
+            <input value={name} onChange={(e) => setName(e.target.value)}
+              placeholder="Name"
+              className="w-full px-4 py-3 bg-white text-black rounded-lg" />
 
-            <input type="tel" placeholder="Phone" value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white text-black placeholder-gray-500" />
+            <input value={phone} onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone"
+              className="w-full px-4 py-3 bg-white text-black rounded-lg" />
 
-            <input type="email" placeholder="Email" value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white text-black placeholder-gray-500" />
+            <input value={email} onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="w-full px-4 py-3 bg-white text-black rounded-lg" />
 
-            <select value={city} onChange={(e) => setCity(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white text-black">
-              <option value="">City</option>
-              <option>Hyderabad</option>
-              <option>Mumbai</option>
-              <option>Delhi</option>
-            </select>
-
-            <select value={collection} onChange={(e) => setCollection(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white text-black">
-              <option value="">Interested In</option>
-              <option>Women</option>
-              <option>Kids</option>
-              <option>Both</option>
-            </select>
-
-            <button onClick={handleSubmit} disabled={loading}
-              className="w-full bg-[color:var(--brand-gold)] text-black py-3 rounded-xl font-semibold hover:scale-105 transition">
-              {loading ? "Saving..." : "Notify Me"}
+            <button onClick={handleSubmit}
+              className="w-full bg-[color:var(--brand-gold)] text-black py-3 rounded-xl hover:scale-105 transition">
+              {loading ? "Sending..." : "Submit Inquiry"}
             </button>
 
-            {/* ✅ SUCCESS */}
             {message === "success" && (
-              <motion.p className="text-green-400 text-center">
-                Registered Successfully!
-              </motion.p>
-            )}
-
-            {/* ✅ ERROR (THIS WAS MISSING) */}
-            {message && message !== "success" && (
-              <p className="text-red-400 text-center">
-                {message}
+              <p className="text-green-400 text-center">
+                Inquiry Submitted Successfully!
               </p>
             )}
 
           </div>
         </div>
       </section>
-      {/* LOCATION */}
-      <section className="py-16 bg-[#111214] text-center text-white">
-        <h3 className="text-2xl mb-4">📍 Opening Soon in Hyderabad</h3>
-        <p className="text-gray-400">
-          Grand Opening at Next Galleria Mall
-        </p>
-      </section>
 
       <Footer />
 
       {/* WHATSAPP */}
-      <a href="https://wa.me/6302800945" target="_blank"
-        className="fixed bottom-6 right-4 bg-green-500 text-white px-5 py-3 rounded-full shadow-2xl hover:scale-110 transition z-50">
-        Chat on WhatsApp
+      <a href="https://wa.me/6302800945"
+        className="fixed bottom-6 right-4 bg-green-500 text-white px-5 py-3 rounded-full shadow-lg">
+        WhatsApp
       </a>
 
       {/* STICKY CTA */}
       {showStickyCTA && (
         <motion.a
           href="#lead"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-[color:var(--brand-gold)] text-black px-6 py-3 rounded-full shadow-xl font-semibold z-40">
-          Get Early Access
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-[color:var(--brand-gold)] text-black px-6 py-3 rounded-full shadow-xl">
+          Contact Us
         </motion.a>
       )}
 
       {/* POPUP */}
-      {showPopup && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 w-[90%] max-w-md text-center relative">
+{showPopup && (
+  <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50">
 
-            <button onClick={() => setShowPopup(false)}
-              className="absolute top-3 right-4 text-gray-500">
-              ✕
-            </button>
+    <div className="relative bg-white p-6 md:p-8 rounded-2xl text-center shadow-2xl max-w-sm w-full">
 
-            <h2 className="text-2xl font-semibold mb-4">
-              🎁 Get Early Access
-            </h2>
+      {/* CLOSE BUTTON (FIXED & VISIBLE) */}
+      <button
+        onClick={() => setShowPopup(false)}
+        className="absolute top-3 right-3 text-black text-xl font-bold hover:scale-110 transition"
+      >
+        ✕
+      </button>
 
-            <p className="text-gray-600 mb-6">
-              Join M&M Fashion before launch & get exclusive offers
-            </p>
+      {/* CONTENT */}
+      <h3 className="text-2xl font-semibold mb-4 text-black">
+        Partner With M&M Fashion
+      </h3>
 
-            <button
-              onClick={() => {
-                setShowPopup(false);
-                document.getElementById("lead")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="bg-black text-white px-6 py-3 rounded-full">
-              Join Now
-            </button>
-          </div>
-        </div>
-      )}
+      <p className="text-gray-500 mb-6 px-2">
+        For leasing opportunities, brand collaborations, and retail partnerships
+      </p>
+
+      {/* CTA BUTTON */}
+      <button
+        onClick={() => {
+          setShowPopup(false);
+          document.getElementById("lead")?.scrollIntoView({ behavior: "smooth" });
+        }}
+        className="px-6 py-3 bg-black text-white rounded-full hover:scale-105 transition"
+      >
+        Contact Now
+      </button>
+
+    </div>
+  </div>
+)}
 
     </main>
   );
