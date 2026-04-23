@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Countdown from "./components/Countdown";
 import Footer from "./components/Footer";
+import Trending from "./components/Trending";
 
 export default function Home() {
 
@@ -115,6 +116,28 @@ export default function Home() {
         </p>
       </section>
 
+      {/* BRAND EXPERIENCE (CARRY BAG) */}
+<section className="py-24 bg-gray-50 px-6 text-center">
+  
+  <h2 className="text-3xl text-black mb-6">
+    Premium Brand Experience
+  </h2>
+
+  <p className="text-gray-600 max-w-3xl mx-auto mb-12">
+    Every purchase at M&M Fashion is designed to deliver not just products,
+    but a premium retail experience you can carry with you.
+  </p>
+
+  <div className="max-w-3xl mx-auto">
+    <img
+      src="/images/carrybag.png"
+      className="rounded-xl shadow-xl mx-auto"
+      alt="M&M Fashion Carry Bag"
+    />
+  </div>
+
+</section>
+
       {/* WHY PREMIUM CARDS */}
       <section className="py-24 bg-gray-50 text-center">
         <h2 className="text-3xl text-black mb-12">Why M&M Fashion</h2>
@@ -160,6 +183,8 @@ export default function Home() {
 
         </div>
       </section>
+
+      <Trending />
 
       {/* STORE GALLERY */}
       <section className="py-24 bg-gray-50 text-center px-6">
@@ -354,6 +379,32 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* VISIT US */}
+<section className="py-20 bg-gray-50 text-center px-6">
+
+  <h2 className="text-3xl text-black mb-6">
+    Visit Our Store
+  </h2>
+
+  <p>
+    M&M Fashion
+  </p>
+
+  <p className="text-gray-500 mb-8">
+    L4, Next Galleria Mall,<br />
+    Musarambagh, Hyderabad – 500036
+  </p>
+
+  <a
+    href="https://maps.google.com/?q=Next+Galleria+Mall+Musarambagh+Hyderabad"
+    target="_blank"
+    className="inline-block px-6 py-3 bg-black text-white rounded-full hover:scale-105 transition"
+  >
+    Get Directions
+  </a>
+
+</section>
 
       <Footer />
 
